@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { firstValueFrom } from 'rxjs';
 import { Course } from '../models/course.model';
 import { GetCoursesResponse } from '../models/get-courses.response';
+import { UpsertCourseBody } from '../models/upsert-course.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class CoursesService {
     return response.courses;
   }
 
-  async createCourse(course: Omit<Course, 'id'>): Promise<Course> {
+  async createCourse(course: UpsertCourseBody): Promise<Course> {
     const course$ = this.httpClient.post<Course>(
       `${this.env.apiRoot}/courses`,
       course
@@ -29,9 +30,12 @@ export class CoursesService {
     return firstValueFrom(course$);
   }
 
-  async updateCourse(course: Course): Promise<Course> {
+  async updateCourse(
+    courseId: string,
+    course: UpsertCourseBody
+  ): Promise<Course> {
     const course$ = this.httpClient.put<Course>(
-      `${this.env.apiRoot}/courses/${course.id}`,
+      `${this.env.apiRoot}/courses/${courseId}`,
       course
     );
     return firstValueFrom(course$);

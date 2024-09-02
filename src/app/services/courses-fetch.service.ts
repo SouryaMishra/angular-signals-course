@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Course } from '../models/course.model';
+import { UpsertCourseBody } from '../models/upsert-course.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class CoursesServiceWithFetch {
     return payload.courses as Course[];
   }
 
-  async createCourse(course: Omit<Course, 'id'>): Promise<Course> {
+  async createCourse(course: UpsertCourseBody): Promise<Course> {
     const response = await fetch(`${this.env.apiRoot}/courses`, {
       method: 'POST',
       headers: {
@@ -25,8 +26,11 @@ export class CoursesServiceWithFetch {
     return response.json();
   }
 
-  async updateCourse(course: Course): Promise<Course> {
-    const response = await fetch(`${this.env.apiRoot}/courses/${course.id}`, {
+  async updateCourse(
+    courseId: string,
+    course: UpsertCourseBody
+  ): Promise<Course> {
+    const response = await fetch(`${this.env.apiRoot}/courses/${courseId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
