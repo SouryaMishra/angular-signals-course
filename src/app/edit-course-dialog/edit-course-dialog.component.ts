@@ -15,6 +15,7 @@ import { CourseCategory } from '../models/course-category.model';
 import { firstValueFrom } from 'rxjs';
 import { UpsertCourseBody } from '../models/upsert-course.model';
 import { UnaryOperator } from '@angular/compiler';
+import { MessagesService } from '../messages/messages.service';
 
 @Component({
   selector: 'edit-course-dialog',
@@ -29,6 +30,7 @@ import { UnaryOperator } from '@angular/compiler';
 })
 export class EditCourseDialogComponent {
   courseService = inject(CoursesService);
+  messagesService = inject(MessagesService);
   dialogRef = inject(MatDialogRef);
   data: EditCourseDialogData = inject(MAT_DIALOG_DATA);
   fb = inject(FormBuilder);
@@ -63,14 +65,20 @@ export class EditCourseDialogComponent {
         );
         this.dialogRef.close(updatedCourse);
       } catch (err) {
-        console.error(err);
+        this.messagesService.showMessage(
+          'Error!! Could not update course',
+          'error'
+        );
       }
     } else if (this.data.mode === 'create') {
       try {
         const newCourse = await this.courseService.createCourse(courseProps);
         this.dialogRef.close(newCourse);
       } catch (err) {
-        console.error(err);
+        this.messagesService.showMessage(
+          'Error!! Could not add course',
+          'error'
+        );
       }
     }
   }
