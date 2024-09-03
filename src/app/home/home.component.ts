@@ -59,13 +59,10 @@ export class HomeComponent implements OnInit {
 
   async loadAllCourses() {
     try {
-      this.loadingService.loadingOn();
       const courses = await this.coursesService.loadAllCourses();
       this.courses.set(courses.sort(sortCoursesBySeqNo));
     } catch (err) {
       console.error(err);
-    } finally {
-      this.loadingService.loadingOff();
     }
   }
 
