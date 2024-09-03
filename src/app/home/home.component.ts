@@ -23,6 +23,7 @@ import {
 } from '@angular/core/rxjs-interop';
 import { CoursesServiceWithFetch } from '../services/courses-fetch.service';
 import { openEditCourseDialog } from '../edit-course-dialog/edit-course-dialog.component';
+import { LoadingService } from '../loading/loading.service';
 
 @Component({
   selector: 'home',
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit {
 
   coursesService = inject(CoursesService);
   dialog = inject(MatDialog);
+  loadingService = inject(LoadingService);
 
   constructor() {
     afterNextRender(() => {
@@ -57,10 +59,13 @@ export class HomeComponent implements OnInit {
 
   async loadAllCourses() {
     try {
+      this.loadingService.loadingOn();
       const courses = await this.coursesService.loadAllCourses();
       this.courses.set(courses.sort(sortCoursesBySeqNo));
     } catch (err) {
       console.error(err);
+    } finally {
+      this.loadingService.loadingOff();
     }
   }
 
