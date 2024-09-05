@@ -38,25 +38,25 @@ export class EditCourseDialogComponent {
   form = this.fb.group({
     title: [''],
     longDescription: [''],
-    category: [''],
     iconUrl: [''],
   });
+  category = signal<CourseCategory>('BEGINNER');
 
   constructor() {
     this.form.patchValue({
       title: this.data?.course?.title,
       longDescription: this.data?.course?.longDescription,
-      category: this.data?.course?.category || 'BEGINNER',
       iconUrl: this.data?.course?.iconUrl,
     });
+    this.category.set(this.data?.course?.category || 'BEGINNER');
   }
 
   async onSave() {
-    if (this.form.pristine) {
-      this.dialogRef.close();
-      return;
-    }
-    const courseProps = this.form.value as UpsertCourseBody;
+    const courseProps = {
+      ...this.form.value,
+      category: this.category(),
+    } as UpsertCourseBody;
+
     if (this.data.mode === 'update') {
       try {
         const updatedCourse = await this.courseService.updateCourse(
