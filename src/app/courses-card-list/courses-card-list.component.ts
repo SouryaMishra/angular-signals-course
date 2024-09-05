@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { Course } from '../models/course.model';
 import { MatDialog } from '@angular/material/dialog';
 import { openEditCourseDialog } from '../edit-course-dialog/edit-course-dialog.component';
+import { MessagesService } from '../messages/messages.service';
 
 @Component({
   selector: 'courses-card-list',
@@ -17,6 +18,7 @@ export class CoursesCardListComponent {
   deleteCourse = output<string>();
 
   dialog = inject(MatDialog);
+  messagesService = inject(MessagesService);
 
   async onEditCourse(course: Course) {
     try {
@@ -27,7 +29,10 @@ export class CoursesCardListComponent {
       });
       this.updateCourse.emit(updatedCourse);
     } catch (err) {
-      console.error(err);
+      this.messagesService.showMessage(
+        'Error!! Could not update course',
+        'error'
+      );
     }
   }
 
