@@ -13,7 +13,7 @@ import { SkipLoading } from '../loading/skip-loading.httpcontext';
 export class CoursesService {
   env = environment;
 
-  httpClient = inject(HttpClient);
+  private httpClient = inject(HttpClient);
 
   async loadAllCourses(): Promise<Course[]> {
     const courses$ = this.httpClient.get<GetCoursesResponse>(
@@ -21,6 +21,12 @@ export class CoursesService {
     );
     const response = await firstValueFrom(courses$);
     return response.courses;
+  }
+  async getCourseById(courseId: string): Promise<Course> {
+    const courses$ = this.httpClient.get<Course>(
+      `${this.env.apiRoot}/courses/${courseId}`
+    );
+    return firstValueFrom(courses$);
   }
 
   async createCourse(course: UpsertCourseBody): Promise<Course> {
