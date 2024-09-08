@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, InputSignal } from '@angular/core';
 import { Lesson } from '../models/lesson.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -33,5 +33,13 @@ export class LessonsService {
     );
     const response = await firstValueFrom(lesson$);
     return response.lessons;
+  }
+
+  async updateLesson(lesson: Lesson): Promise<Lesson> {
+    const updateLesson$ = this.httpClient.put<Lesson>(
+      `${this.env.apiRoot}/lessons/${lesson.id}`,
+      lesson
+    );
+    return firstValueFrom(updateLesson$);
   }
 }
