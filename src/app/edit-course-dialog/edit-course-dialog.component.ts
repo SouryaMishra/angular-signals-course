@@ -1,4 +1,11 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -34,6 +41,7 @@ export class EditCourseDialogComponent {
   dialogRef = inject(MatDialogRef);
   data: EditCourseDialogData = inject(MAT_DIALOG_DATA);
   fb = inject(FormBuilder);
+  span = viewChild.required<ElementRef<HTMLSpanElement>>('span');
 
   form = this.fb.group({
     title: [''],
@@ -43,6 +51,9 @@ export class EditCourseDialogComponent {
   category = signal<CourseCategory>('BEGINNER');
 
   constructor() {
+    effect(() =>
+      console.log('view child', this.span()?.nativeElement.textContent)
+    );
     this.form.patchValue({
       title: this.data?.course?.title,
       longDescription: this.data?.course?.longDescription,

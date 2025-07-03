@@ -17,7 +17,9 @@
     </textarea>
   </div>
 
-  <course-category-combobox [(value)]="category" label="Course category:" />
+  <course-category-combobox [(value)]="category" label="Course category:">
+    <span #span>projected content</span>
+  </course-category-combobox>
 
   <div class="form-control">
     <label>Course image:</label>
